@@ -1,0 +1,34 @@
+<html xmlns:th="https://thymeleaf.org">
+<div >
+    <h2>Drone Info:</h2>
+<table>
+  <tr>
+    <td><h4>DroneId: </h4></td>
+    <td><h4 th:text="${drone.droneId}"></h4></td>
+  </tr>
+  <tr>
+    <td><h4>Temperature: </h4></td>
+    <td><h4 th:text="${drone.temperature}"></h4></td>
+  </tr>
+  <tr>
+    <td><h4>Latitude: </h4></td>
+    <td><h4 th:text="${drone.latitude}"></h4></td>
+  </tr>
+  <tr>
+    <td><h4>Longitude: </h4></td>
+    <td><h4 th:text="${drone.longitude}"></h4></td>
+  </tr>
+  <tr>
+    <td><h4>Humidity: </h4></td>
+    <td><h4 th:text="${drone.humidity}"></h4></td>
+  </tr>
+  <tr>
+    <td><h4>Enable Drone Tracker: </h4></td>
+    <td><h4 th:text="${drone.tracker}"></h4></td>
+  </tr>
+
+</table>
+  </div >
+<p><a href="/">Add new Drone Info</a></p>
+<p><a href="/listDrone">List Drones Info</a></p>
+</html>

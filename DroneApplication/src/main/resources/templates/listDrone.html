@@ -1,0 +1,35 @@
+<div th:switch="${drones}">
+  <h2 th:case="null">No Drones yet!</h2>
+  <div th:case="*">
+    <h2>Drones</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>  DroneId  </th>
+        <th>  Temperature  </th>
+        <th>  Latitude  </th>
+        <th>  Longitude  </th>
+        <th>  Humidity  </th>
+        <th>  Tracker </th>
+
+
+
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="drone : ${drones}">
+        <td th:text="${drone.droneId}"></td>
+        <td th:text="${drone.temperature}"></td>
+        <td th:text="${drone.latitude}"></td>
+        <td th:text="${drone.longitude}"></td>
+        <td th:text="${drone.humidity}"></td>
+        <td th:text="${drone.tracker}"></td>
+
+      </tr>
+      </tbody>
+    </table>
+    <p><a href="/">Add a new Drone Info</a></p>
+  </div>
+
+</div>
+
