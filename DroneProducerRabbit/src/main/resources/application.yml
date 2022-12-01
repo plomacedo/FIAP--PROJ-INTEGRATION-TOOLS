@@ -1,9 +1,9 @@
 spring:
   rabbitmq:
-    addresses: amqps://ecqdffqm:Br39splUn6tt2VW1MEw5aFWHu_60ZY9g@stingray.rmq.cloudamqp.com/ecqdffqm
+    addresses:
 
 queue:
-  fiap: fiap.1scjr.mensagens
+  fiap: 
 
 server:
   port: 8081
