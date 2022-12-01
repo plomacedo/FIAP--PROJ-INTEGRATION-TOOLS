@@ -5,6 +5,7 @@ import br.fiap.integrations.droneconsumerrabbit.models.EmailModel;
 import br.fiap.integrations.droneconsumerrabbit.repositories.EmailRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.MailException;
@@ -20,6 +21,11 @@ import java.util.UUID;
 @Service
 public class EmailService {
 
+    @Value("${spring.mail.username}")
+    private String emailFrom;
+
+    @Value("${email.to}")
+    private String emailTo;
     @Autowired
     EmailRepository emailRepository;
 
@@ -66,11 +72,11 @@ public class EmailService {
         }
         return message;
     }
-    public static EmailModel emailSettings(String message){
+    public EmailModel emailSettings(String message){
 
         EmailModel emailModel = new EmailModel();
-        emailModel.setEmailFrom("rafaellross@gmail.com");
-        emailModel.setEmailTo("rafaellross@gmail.com");
+        emailModel.setEmailFrom(emailFrom);
+        emailModel.setEmailTo(emailTo);
         emailModel.setSubject("Drones in risk");
         emailModel.setOwnerRef("FIAP INTEGRATIONS");
         emailModel.setText(message);
