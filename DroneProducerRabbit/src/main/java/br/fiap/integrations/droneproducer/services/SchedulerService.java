@@ -28,9 +28,15 @@ public class SchedulerService {
 
     public <T extends Job> void schedule(final Class<T> jobClass, final TimeDetails info) {
         final JobDetail jobDetail = TimerUtils.buildJobDetail(jobClass, info);
+
         final Trigger trigger = TimerUtils.buildTrigger(jobClass, info);
 
         try {
+            if(scheduler.checkExists(jobDetail.getKey()))
+            {
+                scheduler.deleteJob(jobDetail.getKey());
+            }
+
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) {
             LOG.error(e.getMessage(), e);
