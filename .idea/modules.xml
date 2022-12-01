@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/DroneApplication/DroneApplication.iml" filepath="$PROJECT_DIR$/DroneApplication/DroneApplication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DroneConsumerRabbit/DroneConsumerRabbit.iml" filepath="$PROJECT_DIR$/DroneConsumerRabbit/DroneConsumerRabbit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DroneProducerRabbit/DroneProducer.iml" filepath="$PROJECT_DIR$/DroneProducerRabbit/DroneProducer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/FIAP--PROJ-INTEGRATION-TOOLS.iml" filepath="$PROJECT_DIR$/.idea/FIAP--PROJ-INTEGRATION-TOOLS.iml" />
+    </modules>
+  </component>
+</project>

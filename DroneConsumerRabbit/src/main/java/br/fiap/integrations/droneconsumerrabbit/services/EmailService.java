@@ -69,8 +69,8 @@ public class EmailService {
     public static EmailModel emailSettings(String message){
 
         EmailModel emailModel = new EmailModel();
-        emailModel.setEmailFrom("aaaaaaa@gmail.com");
-        emailModel.setEmailTo("aaaaaaaaa@hotmail.com");
+        emailModel.setEmailFrom("rafaellross@gmail.com");
+        emailModel.setEmailTo("rafaellross@gmail.com");
         emailModel.setSubject("Drones in risk");
         emailModel.setOwnerRef("FIAP INTEGRATIONS");
         emailModel.setText(message);
