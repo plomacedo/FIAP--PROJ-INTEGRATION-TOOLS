@@ -45,7 +45,7 @@ Uma vez salvo os dados do drone, uma tela de confirmação exibindo as informaç
 
 #### Drone Producer
 Microservice destinado ao Consumo dos dados inseridos no front, Job Scheduler e envio para a fila do RabbitMQ.
-Crie uma nova instancia RabbitMQ. Insira a o url/password no campo addresses, e nomeie a fila no campo fiap.   
+Crie uma nova instancia RabbitMQ. No arquivo application.yml, insira a o url/password no campo addresses, e nomeie a fila no campo fiap.   
 ```
 spring:
   rabbitmq:
@@ -116,3 +116,29 @@ public class JobController {
 ```
 
 #### Drone Consumer
+Microservice responsável por consumir as mensagens enviadas para a fila do RabbitMQ, analisar os dados recebidos e enviar um email caso o drone esteja fora das condições de segurança. Para a execução do microservice, tenha em mãos uma conta gmail. Acesse > Gerenciar sua conta Google > Segurança > Como fazer Login no Google > Senhas de app > adicione o DroneConsumer. Copie a senha genérica gerada pela google.
+
+No aquivo application.properties, insira a url e nome das filas anteriormente inseridos no DroneProducer. 
+Nos campos spring.mail.username e spring.mail.password, insira o email e a senha genérica que acabamos de configurar no Google. Esta será a conta que irá fazer o envio das mensagens de alerta da aplicação 
+Nos campos spring.datasource.url e spring.datasource.password, insira a url/ senha do database PostgreSQL que irá persistir as mensagens de email.
+No campo email.To, insira o endereço de email que deverá receber os alertas.
+
+```
+spring.rabbitmq.addresses= 
+spring.rabbitmq.queue= 
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username= 
+spring.mail.password= 
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+spring.datasource.url= 
+spring.datasource.username=postgres
+spring.datasource.password= 
+spring.jpa.hibernate.ddl-auto=update
+
+email.to =  
+server.port=8082
+```
