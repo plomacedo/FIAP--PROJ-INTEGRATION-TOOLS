@@ -9,12 +9,15 @@
 
 ### 🔧 Instalação
 <br>Ferramentas necessárias:<br>
-<br>PostgreSQL: https://www.postgresql.org/download/</br>
-RabbitMQ: https://www.cloudamqp.com/
++ PostgreSQL: https://www.postgresql.org/download/
++ RabbitMQ: https://www.cloudamqp.com/
++ SpringBoot: https://spring.io/projects/spring-boot
++ Maven
++ JPA
 
 #### Drone Application
-<br>Aplicação destinada ao Front do projeto aonde são inseridos e persistidos os dados do drone. </br>
-Para iniciar a aplicação, importe o repositório Drone Application a sua IDE. Após a criação do database PostgreSQL, abra o arquivo application.properties
+<br> Microservice destinado ao Front do projeto aonde são inseridos os dados em um form Thymeleaf e persistidos em um database PostgreSQL. </br>
+Para iniciar a aplicação, importe o repositório Drone Application a sua IDE. Crie um database PostgreSQL, abra o arquivo application.properties
 e insira a url, username e password referente ao database criado. 
 
 ```
@@ -26,7 +29,17 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 ```
 
-Uma vez configuradas as informações necessárias para a persistência dos valores, inicie a aplicação e acesse http://localhost:8080/
+Uma vez configuradas as informações necessárias para a persistência dos valores, inicie a aplicação, acesse http://localhost:8080/ e insira os dados do drone
 
-<img src="https://user-images.githubusercontent.com/114959652/204373792-5cb95598-be4a-43f1-a6d8-f1d32b554ebb.png"  width="40%" height="40%">
+<img src="https://user-images.githubusercontent.com/114959652/205184917-8009041b-0cd4-4f08-a571-bfdedd64debf.png"  width="25%" height="25%">
+
+Uma vez salvo os dados do drone, uma tela de confirmação exibindo as informações salvas será exibida.
+<img src="https://user-images.githubusercontent.com/114959652/205185029-f4543815-f539-434f-bcc2-0b95d08df60d.png"  width="25%" height="25%">
+
+É possível adicionar quantos drones forem necessários. Também é viavel inserir informações de um mesmo drone mais de uma vez.
+<img src="https://user-images.githubusercontent.com/114959652/205185629-37967e1f-1fbb-44af-a78a-b5f0370cfcd0.png"  width="25%" height="25%">
+
+#### Drone Producer
+
+
 
