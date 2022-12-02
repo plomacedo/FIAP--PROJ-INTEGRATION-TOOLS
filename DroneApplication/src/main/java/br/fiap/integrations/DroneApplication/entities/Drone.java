@@ -19,15 +19,15 @@ public class Drone implements Serializable{
     @Column(nullable = false)
     private double temperature;
     @Column(nullable = false)
-    private BigDecimal latitude;
+    private Double latitude;
     @Column(nullable = false)
-    private BigDecimal longitude;
+    private Double longitude;
     @Column(nullable = false)
     private double humidity;
     @Column(nullable = false)
     private boolean tracker;
 
-    public Drone(UUID id, int droneId, double temperature, BigDecimal latitude, BigDecimal longitude, double humidity, boolean tracker) {
+    public Drone(UUID id, int droneId, double temperature, Double latitude, Double longitude, double humidity, boolean tracker) {
         this.id = id;
         this.droneId = droneId;
         this.temperature = temperature;
@@ -63,19 +63,19 @@ public class Drone implements Serializable{
         this.temperature = temperature;
     }
 
-    public BigDecimal getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(BigDecimal latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public BigDecimal getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(BigDecimal longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
