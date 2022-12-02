@@ -63,12 +63,12 @@ public class EmailService {
         for (int i = 0; i < riskDrones.size(); i++) {
             message = message + "\n---------------------------------------------"
                     + "\n Drone " +i+ ": "
-                    + "\n Drone id: " + riskDrones.get(0).getInt("droneId")
-                    + "\n Temperature: " + riskDrones.get(0).getInt("temperature")
-                    + "\n Latitude: " + riskDrones.get(0).getBigDecimal("latitude")
-                    + "\n Longitude: " + riskDrones.get(0).getBigDecimal("longitude")
-                    + "\n Humidity: " + riskDrones.get(0).getDouble("humidity")
-                    + "\n Tracker Enable: " + riskDrones.get(0).getBoolean("tracker");
+                    + "\n Drone id: " + riskDrones.get(i).getInt("droneId")
+                    + "\n Temperature: " + riskDrones.get(i).getInt("temperature")
+                    + "\n Latitude: " + riskDrones.get(i).getBigDecimal("latitude")
+                    + "\n Longitude: " + riskDrones.get(i).getBigDecimal("longitude")
+                    + "\n Humidity: " + riskDrones.get(i).getDouble("humidity")
+                    + "\n Tracker Enable: " + riskDrones.get(i).getBoolean("tracker");
         }
         return message;
     }
@@ -86,4 +86,3 @@ public class EmailService {
     }
 
 }
-
