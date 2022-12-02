@@ -142,3 +142,70 @@ spring.jpa.hibernate.ddl-auto=update
 email.to =  
 server.port=8082
 ```
+
+Ao iniciar a aplicação, o listener do RabbitMQ começará a escutar todas as mensagens enviadas para a fila. Assim que recebida uma mensagem, a aplicação faz a deserialização do json e a análise das condições de cada drone. 
+
+```
+package br.fiap.integrations.droneconsumerrabbit.consumer;
+...
+
+@Component
+public class QueueConsumer {
+...
+    @RabbitListener(queues = "${spring.rabbitmq.queue}")
+    public void listen(@Payload String fileBody) {
+        JSONObject mqMessage = Utils.messageConverter(fileBody);
+        List<JSONObject> riskDrones = Utils.validateDrone(mqMessage);
+
+        if(riskDrones.size()!=0){
+            String emailMessage = emailService.createEmailMessage(riskDrones);
+            System.out.println(emailMessage);
+            emailService.sendEmail(emailService.emailSettings(emailMessage));
+        }
+    }
+}
+```
+```
+package br.fiap.integrations.droneconsumerrabbit.util;
+...
+public class Utils {
+...
+ public static List<JSONObject> validateDrone(JSONObject my_obj) {
+        JSONObject drones = my_obj.getJSONObject( "drones" );
+        JSONArray arrDrone = drones.getJSONArray( "drone" );
+        List<JSONObject> riskDronesList = new ArrayList<>();
+
+        for(int i = 0; i < arrDrone.length(); i++) {
+            JSONObject drone = arrDrone.getJSONObject( i );
+            if ((drone.getInt( "temperature" ) >= 35) || (drone.getInt( "temperature" ) <= 0) || (drone.getDouble( "humidity" ) < 15)) {
+                riskDronesList.add( drone );
+            }
+        }
+        return riskDronesList;
+    }
+```    
+Uma vez chamada a validação dos dados de cada drone recebido, caso a lista de drones em risco volte diferente de vazia, o microserviço faz o envio do alerta via email: 
+```
+package br.fiap.integrations.droneconsumerrabbit.services;
+...
+@Service
+public class EmailService {
+    public EmailModel sendEmail(EmailModel emailModel) {
+        emailModel.setSendDateEmail( LocalDateTime.now());
+        try{
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(emailModel.getEmailFrom());
+            message.setTo(emailModel.getEmailTo());
+            message.setSubject(emailModel.getSubject());
+            message.setText(emailModel.getText());
+            emailSender.send(message);
+            emailModel.setStatusEmail( StatusEmail.SENT);
+        } catch (MailException e){
+            emailModel.setStatusEmail(StatusEmail.ERROR);
+        }
+        finally {
+            return emailRepository.save(emailModel);
+```            
+Mensagem recebida via email:
+
+<img src="https://user-images.githubusercontent.com/114959652/205194295-6dbb9988-9740-4135-9774-c6eb33ab1ee2.png"  width="60%" height="60%">
