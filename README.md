@@ -208,4 +208,4 @@ public class EmailService {
 ```            
 Mensagem recebida via email:
 
-<img src="https://user-images.githubusercontent.com/114959652/205196013-7e353312-75c5-4f83-b523-dd4be602cc4b.png"  width="60%" height="60%">
+<img src="https://user-images.githubusercontent.com/114959652/205196013-7e353312-75c5-4f83-b523-dd4be602cc4b.png"  width="100%" height="100%">
