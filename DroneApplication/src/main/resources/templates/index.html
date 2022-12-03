@@ -11,19 +11,19 @@
     </tr>
     <tr>
       <td><label for="temperature">Temperature</label></td>
-      <td><input type="number" name="temperature"/></td>
+      <td><input type="number" name="temperature" min="-25" max="40"/></td>
     </tr>
     <tr>
       <td><label for="latitude">Latitude</label></td>
-      <td><input type="number" name="latitude" step=".0000001"/></td>
+      <td><input type="number" name="latitude" step=".0000001" max="90" min="-90"/></td>
     </tr>
     <tr>
       <td><label for="longitude">Longitude</label></td>
-      <td><input type="number" name="longitude" step=".0000001"/></td>
+      <td><input type="number" name="longitude" step=".0000001" max="180" min="-180"/></td>
     </tr>
     <tr>
       <td><label for="humidity">Humidity</label></td>
-      <td><input type="number" name="humidity"/></td>
+      <td><input type="number" name="humidity" min="0" max="100" /></td>
     </tr>
     <tr>
       <td><label for="tracker">Enable Drone Tracker: </label></td>
