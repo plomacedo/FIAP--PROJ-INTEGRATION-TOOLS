@@ -16,8 +16,8 @@ public class PlayerService {
 
     public void runTimer() {
         final TimeDetails info = new TimeDetails();
-        info.setTotalFireCount(100);
-        info.setRepeatIntervalMs(10000);
+        info.setTotalFireCount(1000);
+        info.setRepeatIntervalMs(60000);
         info.setInitialOffsetMs(1000);
 
         scheduler.schedule( EmailScheduler.class, info);
