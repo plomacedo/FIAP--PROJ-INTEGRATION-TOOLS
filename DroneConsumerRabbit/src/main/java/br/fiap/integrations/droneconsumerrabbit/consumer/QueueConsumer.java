@@ -1,5 +1,7 @@
 package br.fiap.integrations.droneconsumerrabbit.consumer;
 
+import br.fiap.integrations.droneconsumerrabbit.models.DroneRisk;
+import br.fiap.integrations.droneconsumerrabbit.services.DroneRiskService;
 import br.fiap.integrations.droneconsumerrabbit.services.EmailService;
 import br.fiap.integrations.droneconsumerrabbit.util.Utils;
 import org.json.JSONObject;
@@ -15,6 +17,9 @@ public class QueueConsumer {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    DroneRiskService droneRiskService;
+
     public QueueConsumer(EmailService emailService) {
         this.emailService = emailService;
     }
@@ -22,12 +27,11 @@ public class QueueConsumer {
     @RabbitListener(queues = "${spring.rabbitmq.queue}")
     public void listen(@Payload String fileBody) {
         JSONObject mqMessage = Utils.messageConverter(fileBody);
-        List<JSONObject> riskDrones = Utils.validateDrone(mqMessage);
 
-        if(riskDrones.size()!=0){
-            String emailMessage = emailService.createEmailMessage(riskDrones);
-            System.out.println(emailMessage);
-            emailService.sendEmail(emailService.emailSettings(emailMessage));
+        List<DroneRisk> riskList = DroneRiskService.checkDrones(mqMessage);
+
+        for (DroneRisk drone: riskList) {
+                droneRiskService.save(drone);
         }
     }
 
