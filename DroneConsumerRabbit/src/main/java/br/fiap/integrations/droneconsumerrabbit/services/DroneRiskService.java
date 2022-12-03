@@ -44,10 +44,8 @@ public class DroneRiskService {
             JSONObject drone = arrDrone.getJSONObject( i );
 
             if ((drone.getInt( "temperature" ) >= 35) || (drone.getInt( "temperature" ) <= 0) || (drone.getDouble( "humidity" ) < 15)) {
-                System.out.println("Entrou no laco");
                 System.out.println(drone);
-
-
+                
                 DroneRisk droneRisk = new DroneRisk();
                 droneRisk.setId( UUID.fromString( drone.getString( "id" ) ) );
                 droneRisk.setDroneId( drone.getInt( "droneId" ) );
