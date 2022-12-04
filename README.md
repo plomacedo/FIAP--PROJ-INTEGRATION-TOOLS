@@ -17,6 +17,8 @@ Ferramentas utilizadas:
 + JPA: https://spring.io/guides/gs/accessing-data-jpa/
 + Quartz: https://docs.spring.io/spring-boot/docs/2.0.0.M3/reference/html/boot-features-quartz.html
 
+Todos os microserviços são executados automaticamente assim que inicializados. 
+
 #### Drone Application
 Microservice destinado ao Front do projeto aonde são inseridos os dados em um form Thymeleaf e persistidos em um database PostgreSQL.
 Para iniciar a aplicação, importe o repositório Drone Application a sua IDE. Crie um database PostgreSQL, abra o arquivo application.properties
@@ -109,8 +111,7 @@ Microservice responsável por consumir as mensagens da fila do RabbitMQ, analise
 
 Para a execução do microservice, tenha em mãos uma conta gmail. Acesse > Gerenciar sua conta Google > Segurança > Como fazer Login no Google > Senhas de app > adicione o DroneConsumer. Copie a senha genérica gerada pela google.
 
-<img src="https://user-images.githubusercontent.com/114959652/205470056-93e4b1cc-b71a-47a3-a92d-e72a3de78db7.png"  width="40%" height="40%">
-<img src="https://user-images.githubusercontent.com/114959652/205470034-692a035a-08fa-4a93-ada0-8f5b30f26de9.png"  width="40%" height="40%">
+<img src="https://user-images.githubusercontent.com/114959652/205470056-93e4b1cc-b71a-47a3-a92d-e72a3de78db7.png"  width="40%" height="40%"><img src="https://user-images.githubusercontent.com/114959652/205470034-692a035a-08fa-4a93-ada0-8f5b30f26de9.png"  width="40%" height="40%">
 
 
 No aquivo application.properties, insira a url e nome das filas anteriormente inseridos no DroneProducer. 
@@ -138,8 +139,7 @@ email.to =
 server.port=8082
 ```
 
-Ao iniciar a aplicação, o listener do RabbitMQ começará a escutar todas as mensagens enviadas para a fila. Assim que recebida uma mensagem, a aplicação faz a deserialização do json e a análise das condições de cada drone. 
-
+Ao iniciar a aplicação, o listener do RabbitMQ começará a escutar sem parar todas as mensagens enviadas para a fila. Assim que recebida uma mensagem, a aplicação faz a deserialização do json e a análise das condições de cada drone. 
 ```
 package br.fiap.integrations.droneconsumerrabbit.consumer;
 ...
@@ -150,36 +150,52 @@ public class QueueConsumer {
     @RabbitListener(queues = "${spring.rabbitmq.queue}")
     public void listen(@Payload String fileBody) {
         JSONObject mqMessage = Utils.messageConverter(fileBody);
-        List<JSONObject> riskDrones = Utils.validateDrone(mqMessage);
+        List<DroneRisk> riskList = DroneRiskService.checkDrones(mqMessage);
 
-        if(riskDrones.size()!=0){
-            String emailMessage = emailService.createEmailMessage(riskDrones);
-            System.out.println(emailMessage);
-            emailService.sendEmail(emailService.emailSettings(emailMessage));
+        for (DroneRisk drone: riskList) {
+                droneRiskService.save(drone);
         }
     }
 }
 ```
+
+Caso o Drone esteja exposto a uma temperatura maior igual a 35, menor igual a 0, ou a Umidade <= 15%, o Drone será imediatamente persistido na tabela "TB_DRONE_RISK".  Para isso, a aplicação consta da entidade DroneRisk, assim como seu service (aonde as regras de segurança são validadas e Repository (JPA). 
+
 ```
-package br.fiap.integrations.droneconsumerrabbit.util;
+package br.fiap.integrations.droneconsumerrabbit.services;
 ...
-public class Utils {
+@Service
+public class DroneRiskService {
 ...
- public static List<JSONObject> validateDrone(JSONObject my_obj) {
+  public static List<DroneRisk> checkDrones(JSONObject my_obj) {
         JSONObject drones = my_obj.getJSONObject( "drones" );
         JSONArray arrDrone = drones.getJSONArray( "drone" );
-        List<JSONObject> riskDronesList = new ArrayList<>();
 
-        for(int i = 0; i < arrDrone.length(); i++) {
+        List<DroneRisk> riskDronesList = new ArrayList<>();
+
+        for (int i = 0; i < arrDrone.length(); i++) {
             JSONObject drone = arrDrone.getJSONObject( i );
+
             if ((drone.getInt( "temperature" ) >= 35) || (drone.getInt( "temperature" ) <= 0) || (drone.getDouble( "humidity" ) < 15)) {
-                riskDronesList.add( drone );
+                System.out.println(drone);
+
+                DroneRisk droneRisk = new DroneRisk();
+                droneRisk.setId( UUID.fromString( drone.getString( "id" ) ) );
+                droneRisk.setDroneId( drone.getInt( "droneId" ) );
+                droneRisk.setTemperature( drone.getInt( "temperature" ) );
+                droneRisk.setLatitude( drone.getDouble( "latitude" ) );
+                droneRisk.setLongitude( drone.getDouble( "longitude" ) );
+                droneRisk.setHumidity( drone.getDouble( "humidity" ) );
+                droneRisk.setTracker( drone.getBoolean( "tracker" ) );
+
+                riskDronesList.add(droneRisk);
             }
         }
         return riskDronesList;
     }
-```    
-Uma vez chamada a validação dos dados de cada drone recebido, caso a lista de drones em risco volte diferente de vazia, o microserviço faz o envio do alerta via email: 
+```  
+Para o serviço de envio de email, foi desenvolvido um outro JobScheduler (Quartz) que é iniciado junto a aplicação. O Job Email Scheduler é responsável por verificar a lista de drones em risco, e enviar um email de alerta para o email cadastrado no properties a cada 1 minuto. 
+
 ```
 package br.fiap.integrations.droneconsumerrabbit.services;
 ...
