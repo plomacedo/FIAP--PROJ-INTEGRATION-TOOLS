@@ -45,17 +45,16 @@ Uma vez salvo os dados do drone, uma tela de confirmação exibindo as informaç
 
 Todas as informações do drone são persistidos atravez de JPA/PostreSQL
 
-<img src="https://user-images.githubusercontent.com/114959652/205469846-07b5bce9-a0b0-4510-967f-d3e05c5ec1dd.png"  width="30%" height="30%">
+<img src="https://user-images.githubusercontent.com/114959652/205469846-07b5bce9-a0b0-4510-967f-d3e05c5ec1dd.png"  width="40%" height="40%">
 
-![image](https://user-images.githubusercontent.com/114959652/205469846-07b5bce9-a0b0-4510-967f-d3e05c5ec1dd.png)
 
-Para isso, o projeto é composto de uma entidade Drone e seus respectivos Service e Repository. Através do controller, os dados inseridos atravé
-s do form thymeleaf, são conectados com a base de dados. 
+Para isso, o projeto é composto de uma entidade Drone e seus respectivos Service e Repository. Através do controller, os dados inseridos através do form thymeleaf são conectados com a base de dados. 
 
 <img src="https://user-images.githubusercontent.com/114959652/205469867-c20b1ab4-1036-4a64-850b-115bf559640d.png"  width="30%" height="30%">
 
 #### Drone Producer
 Microservice destinado ao Consumo dos dados inseridos no front, Job Scheduler e envio para a fila do RabbitMQ.
+
 Crie uma nova instancia RabbitMQ. No arquivo application.yml, insira a o url/password no campo addresses, e nomeie a fila no campo fiap.   
 ```
 spring:
@@ -69,27 +68,23 @@ server:
   port: 8081
 uri: http://localhost:8080/externalAccess
 ```
-Configure os valores desejados para o Scheduler
-Acesse br.fiap.integrations.droneproducer.services.PlayerService e insira os valores desejados para a configuração do scheduler:
-+ setTotalFireCount: Quantidade de vezes que o job será executado. Para rodar para sempre, envie o valor -1.
-+ serRemainingFireCount: Quantidade de vezes restantes para executar o job.
+Para configurar os valores desejados do Scheduler acesse  a classe PlayerService e insira:
++ setTotalFireCount: Quantidade de vezes que o job será executado.
 + setRepeatIntervalMs: Intervalo de tempo entre cada repetição.
 + setInitialOffsetMs: Período de espera entre o play e a primeira repetição do job.
 
 ```
 public void runTimer() {
         final TimeDetails info = new TimeDetails();
-        info.setTotalFireCount(6);
-        info.setRemainingFireCount(info.getTotalFireCount());
+        info.setTotalFireCount(1000);
         info.setRepeatIntervalMs(10000);
         info.setInitialOffsetMs(1000);
-        info.setCallbackData("My callback data");
 
         scheduler.schedule( ScheduledJob.class, info);
     }
 ```
 
-A lista de comando que deve ser executada dentro de cada iteração do scheduled job consta dentro de br.fiap.integrations.droneproducer.entities.ScheduledJob. Neste ponto solicitamos a leitura dos dados do microservice DroneApplication através de um Get Request (uri descrita no arquivo properties) de acordo com as repetições e periodo de tempo configurados anteriormente, assim como o envio para a fila do RabbitMQ: 
+A lista de comando que deve ser executada dentro de cada iteração do scheduled job consta dentro da classe ScheduledJob. Neste ponto solicitamos a captura dos dados do microservice DronevApplication, e de acordo com as repetições e periodo de tempo configurados no PlayerService, ocorre o envio dos dados para a fila do RabbitMQ: 
 
 ```
      @Override
@@ -107,24 +102,7 @@ A lista de comando que deve ser executada dentro de cada iteração do scheduled
     }
     
 ```
-Para disparar o início das repetições, inicialize o microservice e através do Postman envie um POST REQUEST - HTTP://localhost:8081/api/controller/main implementado no JobController:
-
-```
-package br.fiap.integrations.droneproducer.controller;
-
-...
-
-@RestController
-@RequestMapping("/api/controller")
-public class JobController {
-...
-    @PostMapping("/main")
-    public void runMain(){
-        service.runTimer();
-    }
-...
-}
-```
+Para disparar o início das repetições, apenas inicialize o microservice.
 
 #### Drone Consumer
 Microservice responsável por consumir as mensagens enviadas para a fila do RabbitMQ, analisar os dados recebidos e enviar um email caso o drone esteja fora das condições de segurança. Para a execução do microservice, tenha em mãos uma conta gmail. Acesse > Gerenciar sua conta Google > Segurança > Como fazer Login no Google > Senhas de app > adicione o DroneConsumer. Copie a senha genérica gerada pela google.
