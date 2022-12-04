@@ -15,13 +15,13 @@ Ferramentas utilizadas:
 + SpringBoot: https://spring.io/projects/spring-boot
 + Maven: https://maven.apache.org/
 + JPA: https://spring.io/guides/gs/accessing-data-jpa/
-+ Postman: https://www.postman.com/
 + Quartz: https://docs.spring.io/spring-boot/docs/2.0.0.M3/reference/html/boot-features-quartz.html
 
 #### Drone Application
 Microservice destinado ao Front do projeto aonde são inseridos os dados em um form Thymeleaf e persistidos em um database PostgreSQL.
 Para iniciar a aplicação, importe o repositório Drone Application a sua IDE. Crie um database PostgreSQL, abra o arquivo application.properties
 e insira a url, username e password referente ao database criado. 
+
 ```
 spring.datasource.url=
 spring.datasource.username=
@@ -42,6 +42,17 @@ Uma vez salvo os dados do drone, uma tela de confirmação exibindo as informaç
 É possível adicionar quantos drones forem necessários. Também é viavel inserir informações de um mesmo drone mais de uma vez.
 
 <img src="https://user-images.githubusercontent.com/114959652/205185629-37967e1f-1fbb-44af-a78a-b5f0370cfcd0.png"  width="30%" height="30%">
+
+Todas as informações do drone são persistidos atravez de JPA/PostreSQL
+
+<img src="https://user-images.githubusercontent.com/114959652/205469846-07b5bce9-a0b0-4510-967f-d3e05c5ec1dd.png"  width="30%" height="30%">
+
+![image](https://user-images.githubusercontent.com/114959652/205469846-07b5bce9-a0b0-4510-967f-d3e05c5ec1dd.png)
+
+Para isso, o projeto é composto de uma entidade Drone e seus respectivos Service e Repository. Através do controller, os dados inseridos atravé
+s do form thymeleaf, são conectados com a base de dados. 
+
+<img src="https://user-images.githubusercontent.com/114959652/205469867-c20b1ab4-1036-4a64-850b-115bf559640d.png"  width="30%" height="30%">
 
 #### Drone Producer
 Microservice destinado ao Consumo dos dados inseridos no front, Job Scheduler e envio para a fila do RabbitMQ.
