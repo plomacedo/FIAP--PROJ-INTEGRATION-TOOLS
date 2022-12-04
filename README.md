@@ -105,7 +105,13 @@ A lista de comando que deve ser executada dentro de cada iteração do scheduled
 Para disparar o início das repetições, apenas inicialize o microservice.
 
 #### Drone Consumer
-Microservice responsável por consumir as mensagens enviadas para a fila do RabbitMQ, analisar os dados recebidos e enviar um email caso o drone esteja fora das condições de segurança. Para a execução do microservice, tenha em mãos uma conta gmail. Acesse > Gerenciar sua conta Google > Segurança > Como fazer Login no Google > Senhas de app > adicione o DroneConsumer. Copie a senha genérica gerada pela google.
+Microservice responsável por consumir as mensagens da fila do RabbitMQ, analise dos dados recebidos e envio programado doemail constando as informações dos dronsefora das condições de segurança. 
+
+Para a execução do microservice, tenha em mãos uma conta gmail. Acesse > Gerenciar sua conta Google > Segurança > Como fazer Login no Google > Senhas de app > adicione o DroneConsumer. Copie a senha genérica gerada pela google.
+
+<img src="https://user-images.githubusercontent.com/114959652/205470056-93e4b1cc-b71a-47a3-a92d-e72a3de78db7.png"  width="40%" height="40%">
+<img src="https://user-images.githubusercontent.com/114959652/205470034-692a035a-08fa-4a93-ada0-8f5b30f26de9.png"  width="40%" height="40%">
+
 
 No aquivo application.properties, insira a url e nome das filas anteriormente inseridos no DroneProducer. 
 Nos campos spring.mail.username e spring.mail.password, insira o email e a senha genérica que acabamos de configurar no Google. Esta será a conta que irá fazer o envio das mensagens de alerta da aplicação 
