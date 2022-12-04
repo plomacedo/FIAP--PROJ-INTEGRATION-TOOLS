@@ -219,4 +219,7 @@ public class EmailService {
 ```            
 Mensagem recebida via email:
 
-<img src="https://user-images.githubusercontent.com/114959652/205196013-7e353312-75c5-4f83-b523-dd4be602cc4b.png"  width="100%" height="100%">
+<img src="https://user-images.githubusercontent.com/114959652/205470504-4a5f40a3-444f-4982-a0ea-d24875e6cb2f.png"  width="100%" height="100%">
+<img src="https://user-images.githubusercontent.com/114959652/205470563-6766962b-a2de-4b40-9057-2add05749860.png"  width="100%" height="100%">
+
+Para controle da aplicação, todos os emails também estão persistidos no postgreSQL através da tabela TB_EMAIL. Para isso a aplicação consta com a entidade EmailModel, assim como seu respectivo service e Repository (JPA). 
